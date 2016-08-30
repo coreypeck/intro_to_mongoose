@@ -42,9 +42,12 @@
         </form>
       </section>
       <!-- See submitted books -->
+
       <section id="books" class="row">
         <h2>Book Listing</h2>
-        <div id="bookList" ng-repeat="book in books">
+        <button ng-click="sortBy('title')">Title</button>
+        <span class="sortorder" ng-show="propertyName === 'title'" ng-class="{reverse: reverse}"></span>
+        <div id="bookList" ng-repeat="book in books | orderBy:title:reverse">
           <div class="book row">
             <div class="three columns">
               <label for="title">Title:</label>

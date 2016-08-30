@@ -13,8 +13,7 @@ var bookSchema = new Schema({
   author: String,
   publisher: String,
   publishDate: Date,
-  postedBy: [Comment.postedBy],
-  comments: [Comment.content]
+  comments: [Comment]
 });
 
 // Step 2 - Create the model

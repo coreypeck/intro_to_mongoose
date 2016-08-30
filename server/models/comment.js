@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 // subdocument
 var commentSchema = new Schema({
-  postedBy: String,
+  postedBy: { type: String, required: true },
   content: { type: String, required: true }
 });
 

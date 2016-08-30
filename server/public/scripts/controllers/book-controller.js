@@ -1,66 +1,73 @@
-app.controller('BookController', ['$scope', '$http', function ($scope, $http) {
-  $scope.books = []; // the array of books we expect
-  $scope.newBook = {}; // a single book to be added to db
-  $scope.displayBookId = '';
-  $scope.newComment = {};
+app.controller('BookController', ['$scope', '$http', function($scope, $http) {
+    $scope.books = []; // the array of books we expect
+    $scope.newBook = {}; // a single book to be added to db
+    $scope.displayBookId = '';
+    $scope.newComment = {};
+    $scope.reverse = true;
+    $scope.propertyName = 'title'
 
-  getBooks();
+    getBooks();
 
-  /** --- Scoped functions -- **/
-  $scope.submitNewBook = function () {
-    var data = $scope.newBook;
-    $http.post('/books', data)
-      .then(function () {
-        console.log('POST /books', data);
-        getBooks();
-      });
-  };
+    /** --- Scoped functions -- **/
+    $scope.sortBy = function(propertyName) {
+        $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+        $scope.propertyName = propertyName;
+    };
 
-  $scope.deleteBook = function (id) {
-    $http.delete('/books/' + id)
-      .then(function () {
-        console.log('DELETE /books/', id);
-        getBooks();
-      });
-  };
+    $scope.submitNewBook = function() {
+        var data = $scope.newBook;
+        $http.post('/books', data)
+            .then(function() {
+                console.log('POST /books', data);
+                getBooks();
+            });
+    };
 
-  $scope.updateBook = function (book) {
-    var id = book._id;
+    $scope.deleteBook = function(id) {
+        $http.delete('/books/' + id)
+            .then(function() {
+                console.log('DELETE /books/', id);
+                getBooks();
+            });
+    };
 
-    $http.put('/books/' + id, book)
-      .then(function () {
-        console.log('PUT /books', id);
-        getBooks();
-      });
-  };
+    $scope.updateBook = function(book) {
+        var id = book._id;
 
-  $scope.displayComments = function (id) {
-    $scope.displayBookId = id;
-  };
+        $http.put('/books/' + id, book)
+            .then(function() {
+                console.log('PUT /books', id);
+                getBooks();
+            });
+    };
 
-  $scope.submitComment = function (id) {
-    var data = $scope.newComment;
-    $http.post('/books/' + id + '/comments', data)
-      .then(function () {
-        console.log('POST /books/', id, '/comments', data);
-        $scope.newComment = {};
-        getBooks();
-      });
-  };
+    $scope.displayComments = function(id) {
+        $scope.displayBookId = id;
+    };
 
-  /** -- Utility functions -- **/
-  function getBooks() {
-    $http.get('/books')
-      .then(function (response) {
-        console.log('GET /books', response.data);
+    $scope.submitComment = function(id) {
+        var data = $scope.newComment;
+        $http.post('/books/' + id + '/comments', data)
+            .then(function() {
+                console.log('POST /books/', id, '/comments', data);
+                $scope.newComment = {};
+                getBooks();
+            });
+    };
 
-        var bookDataArray = response.data;
+    /** -- Utility functions -- **/
+    function getBooks() {
+        $http.get('/books')
+            .then(function(response) {
+                console.log('GET /books', response.data);
 
-        bookDataArray.forEach(function (book) {
-          book.publishDate = new Date(book.publishDate);
-        });
+                var bookDataArray = response.data;
 
-        $scope.books = bookDataArray;
-      });
-  }
+                bookDataArray.forEach(function(book) {
+                    book.publishDate = new Date(book.publishDate);
+                });
+
+                $scope.books = bookDataArray;
+            });
+    }
 }]);
